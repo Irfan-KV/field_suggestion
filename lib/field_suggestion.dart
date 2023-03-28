@@ -474,12 +474,10 @@ class FieldSuggestion<T> extends StatefulWidget {
   final Curve slideCurve;
 
   @override
-  _FieldSuggestionState createState() =>
-      _FieldSuggestionState<T>(boxController);
+  _FieldSuggestionState createState() => _FieldSuggestionState<T>(boxController);
 }
 
-class _FieldSuggestionState<T> extends State<FieldSuggestion<T>>
-    with TickerProviderStateMixin {
+class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProviderStateMixin {
   // Initialize BoxController closures.
   _FieldSuggestionState(BoxController? _boxController) {
     if (_boxController == null) return;
@@ -679,6 +677,10 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>>
         cursorRadius: widget.cursorRadius,
         cursorColor: widget.cursorColor,
         keyboardAppearance: widget.keyboardAppearance,
+        onTap: () {
+          openBox();
+          searchManager.search('');
+        },
       ),
     );
   }
@@ -700,8 +702,7 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>>
             valueListenable: searchManager,
             builder: (context, SearchState<T> value, _) {
               final len = value.snapshot.data?.length ?? 1;
-              final match =
-                  widget.future != null ? (len > 1 ? len : 1) : matchers.length;
+              final match = widget.future != null ? (len > 1 ? len : 1) : matchers.length;
 
               return BoxSizer(
                 constraints: BoxConstraints(
@@ -722,12 +723,10 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>>
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     itemCount: matchers.length,
-                    separatorBuilder: widget.separatorBuilder ??
-                        (_, __) => const SizedBox.shrink(),
+                    separatorBuilder: widget.separatorBuilder ?? (_, __) => const SizedBox.shrink(),
                     itemBuilder: (context, index) {
                       // Get the index of matcher[i] in suggestions list.
-                      final mindex =
-                          widget.suggestions!.indexOf(matchers[index]);
+                      final mindex = widget.suggestions!.indexOf(matchers[index]);
                       return widget.itemBuilder!(context, mindex);
                     },
                   );
@@ -741,9 +740,7 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>>
       color: boxStyle?.backgroundColor,
       borderRadius: boxStyle?.borderRadius,
       elevation: 0,
-      child: !widget.wSlideAnimation
-          ? _box
-          : SlideTransition(position: _slide!, child: _box),
+      child: !widget.wSlideAnimation ? _box : SlideTransition(position: _slide!, child: _box),
     );
   }
 }

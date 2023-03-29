@@ -515,7 +515,7 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProv
 
   @override
   void dispose() {
-    widget.textController.dispose();
+    //widget.textController.dispose();
     super.dispose();
   }
 

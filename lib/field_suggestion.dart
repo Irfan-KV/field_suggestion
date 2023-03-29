@@ -114,6 +114,7 @@ class FieldSuggestion<T> extends StatefulWidget {
     this.maxLines,
     this.inputStyle,
     this.validator,
+    this.onChanged,
     this.cursorWidth = 2,
     this.cursorHeight,
     this.cursorRadius,
@@ -171,6 +172,7 @@ class FieldSuggestion<T> extends StatefulWidget {
     this.maxLines,
     this.inputStyle,
     this.validator,
+    this.onChanged,
     this.cursorWidth = 2,
     this.cursorHeight,
     this.cursorRadius,
@@ -406,6 +408,9 @@ class FieldSuggestion<T> extends StatefulWidget {
 
   /// Field's input validator.
   final FormFieldValidator<String>? validator;
+
+  /// Field's input validator.
+  final void Function(String)? onChanged;
 
   /// The width(thickness) of field's cursor.
   final double cursorWidth;
@@ -672,13 +677,14 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProv
         decoration: widget.inputDecoration,
         style: widget.inputStyle,
         validator: widget.validator,
+        onChanged: widget.onChanged,
         cursorWidth: widget.cursorWidth,
         cursorHeight: widget.cursorHeight,
         cursorRadius: widget.cursorRadius,
         cursorColor: widget.cursorColor,
         keyboardAppearance: widget.keyboardAppearance,
         onTap: () {
-          if (widget.textController.text.isEmpty) {
+          if (widget.textController.text.isEmpty && widget.inputDecoration!.enabled) {
             openBox();
             searchManager.search('');
           }

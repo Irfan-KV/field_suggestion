@@ -526,7 +526,7 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProv
       onData: widget.onData ?? (_) => openBox(),
       onError: widget.onError ?? (_) => closeBox(),
       onLoad: widget.onLoad ?? (_) => openBox(),
-      onEmptyData: widget.onEmptyData ?? (_) => closeBox(),
+      onEmptyData: widget.onEmptyData ?? (_) => openBox(),
       future: widget.future,
       initialState: widget.initialData == null
           ? AsyncSnapshot<List<T>>.nothing()
@@ -570,7 +570,7 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProv
   Future<void> _textListener() async {
     final input = widget.textController.text;
 
-    if (widget.future != null) return searchManager.search(input);
+    if (widget.future != null && input.isNotEmpty) return searchManager.search(input);
 
     // Should close box if input is empty.
     if (input.isEmpty) return closeBox();
@@ -579,7 +579,7 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProv
       return widget.search?.call(i, input.toString()) ?? false;
     }).toList();
 
-    return (matchers.isEmpty) ? closeBox() : openBox();
+    return openBox();
   }
 
   // A set-state wrapper to avoid [setState after dispose] error.
@@ -678,8 +678,10 @@ class _FieldSuggestionState<T> extends State<FieldSuggestion<T>> with TickerProv
         cursorColor: widget.cursorColor,
         keyboardAppearance: widget.keyboardAppearance,
         onTap: () {
-          openBox();
-          searchManager.search('');
+          if (widget.textController.text.isEmpty) {
+            openBox();
+            searchManager.search('');
+          }
         },
       ),
     );
